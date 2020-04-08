@@ -11,7 +11,7 @@ import Foundation
 class Mage: Character {
     
     init() {
-        super.init(name: "Mage", life: 90, weapon: Staff())
+        super.init(name: "", life: 90, weapon: Staff())
         
     }
 }
