@@ -10,8 +10,8 @@ import Foundation
 
 class Paladin: Character {
     
-    init() {
-        super.init(name: "", life: 120, weapon: Hammer())
+    init(name: String) {
+        super.init(name: name, life: 120, weapon: Hammer())
         
     }
 }

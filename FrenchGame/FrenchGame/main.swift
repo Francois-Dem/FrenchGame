@@ -8,26 +8,6 @@
 
 import Foundation
 
-/*
-Création d’un Jeu tour par tour sur terminal
-
-2 joueurs
- 
-sélectionnant chacun 3 personnages et donnent un nom à chacun de leurs personnages
-
-un personnage aura:
-Personnage  nom  / vie / arme
-
-3 class différente de personnage
-
-3 types d’armes différente
-
-
-
-————————
-4 class   Game / Player / Character / Weapon
-
-Weapon -> Sword / hammer / Staff
-
-Character -> Warrior / Paladin / mage
- */
+let game = Game()
+game.fake()
+game.start()

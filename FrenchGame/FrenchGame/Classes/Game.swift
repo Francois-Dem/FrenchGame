@@ -11,16 +11,19 @@ import Foundation
 class Game {
     var players: [Player]
     
-    init(players: [Player]){
+    init(){
         self.players = []
     }
     
-    // func Name Personnage
-    func askName(message: String) -> String {
-        guard let nameCharacter = readLine() else {
-            return "No name"
+    // askName
+    // Dans la fonction verifier si nom déjà existant
+    // Pour chaque player dans players puis pour chaque character dans player.characters
+    func askName() -> String {
+        print("Merci de saisir le nom du personnage")
+        if let nameCharacter = readLine() {
+            return nameCharacter
         }
-        return nameCharacter
+        return askName()
     }
     
     
@@ -39,22 +42,15 @@ class Game {
             let choice = readLine()
             switch choice {
                 case "1": // warrior
-                    let warrior = Warrior()
-                    // Externaliser dans une fonction avec 1 parametr de type string (message)
-                    // Dans la fonction verifier si nom déjà existant
-                    // Pour chaque player dans players puis pour chaque character dans player.characters
-                    print("Merci de saisir le nom du personnage")
-                    guard let nameCharacter = readLine() else {
-                        teamSelect(player: player)
-                        return
-                    }
-                    // Fin ext
-                    warrior.name = askName(message: "Merci de saisir le nom du personnage")
+                    //Saisie avec function askName
+                    let warrior = Warrior(name: askName())
                     player.characters.append(warrior)
                 case "2": // paladin
-                    player.characters.append(Paladin())
+                    let paladin = Paladin(name: askName())
+                    player.characters.append(paladin)
                 case "3": // mage
-                    player.characters.append(Mage())
+                    let mage = Mage(name: askName())
+                    player.characters.append(mage)
                 default:
                     print("Votre choix n'est pas valide")
             }
@@ -63,6 +59,7 @@ class Game {
     
     
     func start() {
+        print("Début de la partie")
         while players.count < 2 {
             playerSelect()
         }
@@ -75,8 +72,14 @@ class Game {
             return
         }
         print("merci de saisir votre equipe")
-        teamSelect(player: Player(name: name, characters: []))
+        let player = Player(name: name, characters: [])
+        teamSelect(player: player)
     }
+    
+    func fake(){
+        
+    }
+    
 }
 
 

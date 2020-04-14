@@ -10,8 +10,8 @@ import Foundation
 
 class Mage: Character {
     
-    init() {
-        super.init(name: "", life: 90, weapon: Staff())
+    init(name: String) {
+        super.init(name: name, life: 90, weapon: Staff())
         
     }
 }
