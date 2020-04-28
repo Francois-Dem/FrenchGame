@@ -12,10 +12,17 @@ import Foundation
 class Player {
     var name: String
     var characters: [Character]
+    var lifes: [Int] {
+        return characters.map { $0.life }
+    }
+    var totalLifeTeam: Int {
+        return lifes.reduce(0, +)
+    }
     
     init(name: String, characters: [Character]) {
         self.name = name
         self.characters = []
     }
 }
+
 
