@@ -12,10 +12,8 @@ import Foundation
 class Player {
     var name: String
     var characters: [Character]
-    var lifes: [Int] {
-        return characters.map { $0.life }
-    }
     var totalLifeTeam: Int {
+        let lifes = characters.map { $0.life }
         return lifes.reduce(0, +)
     }
     
