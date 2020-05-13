@@ -16,22 +16,21 @@ class Game {
     
     var players: [Player]
     var namescheck: [String] {
-        return self.players.map { $0.name } // check dans le tableau la valeur name
+        // Check "name" in players array
+        return self.players.map { $0.name }
     }
     var turn: Int
     
-    init(){ // suppression des paramétres de cet init pour que le main fonctionne
+    init(){
         self.players = []
         self.turn = 0
     }
     
-    // askName
-    // Dans la fonction verifier si nom déjà existant
-    // Pour chaque player dans players puis pour chaque character dans player.characters
+    ///check entry name for player and name for character is already in players array with namescheck
     func askName() -> String {
         print("Merci de saisir le nom du personnage")
         if let characterName = readLine() {
-            if namescheck.contains(characterName) { // test si entrée déja présente
+            if namescheck.contains(characterName) {
                 print("Le nom que vous avez choisi est déja utilisé")
                 return askName()
             }
@@ -44,25 +43,29 @@ class Game {
     
     func teamSelect(player: Player) {
         print("Merci de selectionner 3 personnages pour constituer votre équipe")
-        players.append(player) // Ajoute un joueur dans le tableau players
+        //add character in players array
+        players.append(player)
         
         while player.characters.count < 3 {
             print("""
-            Quelle classe de personnage souhaitez vous selectionner ?
+            Quelle classe de personnage souhaitez-vous selectionner ?
             1. ⚔️  Un Guerrier
             2. 🔨  Un Paladin
             3. 🧙‍♂️  Un Magicien
             """)
             let choice = readLine()
             switch choice {
-            case "1": // warrior
-                //Saisie avec function askName
+            // warrior
+            case "1":
+                //create character with askName
                 let warrior = Warrior(name: askName())
                 player.characters.append(warrior)
-            case "2": // paladin
+            // paladin
+            case "2":
                 let paladin = Paladin(name: askName())
                 player.characters.append(paladin)
-            case "3": // mage
+            // mage
+            case "3":
                 let mage = Mage(name: askName())
                 player.characters.append(mage)
             default:
@@ -72,7 +75,7 @@ class Game {
         
     }
     
-    
+    /// Start Game
     func start() {
         print("Début de la partie")
         while players.count < 2 {
@@ -84,20 +87,34 @@ class Game {
             startTurn(player: self.players[0])
             startTurn(player: self.players[1])
         }
-        // Fin de partie
+        // End Combat
         endGame()
     }
     
     func endGame() {
-        // Test du joueur gagnant (totalLifeTeam > 0) -> Print nom du joueur gagnant
-        // Print nombres de tour
-        // Print équipe J1
-        // Print équipe J2
+        let playerWin = players[0].totalLifeTeam > 0 ? players[0] : players[1]
+        print("Le joueur 👤 \(playerWin.name) remporte la partie en \(turn) tours !")
+
+        print("""
+            👥 Equipe du joueur 1 \(players[0])
+            1. \(players[0].characters[0].name) vie: \(players[0].characters[0].life)
+            2. \(players[0].characters[1].name) vie: \(players[0].characters[1].life)
+            3. \(players[0].characters[2].name) vie: \(players[0].characters[2].life)
+            
+            """)
+
+        print("""
+            👥 Equipe du joueur 2 \(players[1])
+            1. \(players[1].characters[0].name) vie: \(players[1].characters[0].life)
+            2. \(players[1].characters[1].name) vie: \(players[1].characters[1].life)
+            3. \(players[1].characters[2].name) vie: \(players[1].characters[2].life)
+            """)
     }
     
     func playerSelect() {
         print("Merci de saisir votre nom de joueur")
-        guard let name = readLine() else {  // verifie que name n'est pas vide
+        //check name is not empty
+        guard let name = readLine() else {
             playerSelect()
             return
         }
@@ -106,7 +123,8 @@ class Game {
         teamSelect(player: player)
     }
     
-    func fake(){ // fonction de génération d'équipe
+    /// function create team
+    func fake(){
         let player = Player(name: "joueur 1", characters: [])
         player.characters.append(Warrior(name: "warrior"))
         player.characters.append(Paladin(name: "paladin"))
@@ -135,9 +153,16 @@ class Game {
         let selected = readLine()
         switch selected {
         case "1", "2", "3":
-            let selectedIdx = Int(selected!)! - 1 // ouverture d'un optionel
-            randomChest(character: player.characters[selectedIdx])
-            selectAction(player: player, character: player.characters[selectedIdx])
+            // open optional
+            let selectedIdx = Int(selected!)! - 1
+            let selectedCharacter = player.characters[selectedIdx]
+            
+            guard selectedCharacter.life > 0 else {
+                print("Votre choix n'est pas valide, le personnage est mort")
+                return startTurn(player: player)
+            }
+            randomChest(character: selectedCharacter)
+            selectAction(player: player, character: selectedCharacter)
         default:
             print("Votre choix n'est pas valide")
             startTurn(player: player)
@@ -146,9 +171,10 @@ class Game {
     
     func randomChest(character: Character) {
         let randValue = Int.random(in: 1 ... 100)
-        if (randValue < 30) {
+        // 50 % random chance
+        if (randValue < 51) {
             print("""
-                   🎲 Un coffre d'arme surprise est apparu ! Voulez vous l'ouvrir ?
+                   🎲 Un coffre d'arme surprise est apparu ! Voulez-vous l'ouvrir ?
                     1. Ouvrir
                     2. Ne pas ouvrir
                 """)
@@ -168,9 +194,10 @@ class Game {
     
     func selectAction(player: Player, character: Character) {
         print("""
-                       Quelle action souhaitez vous faire ?
-                       1. Attaquer un personnage adverse
-                       2. Soigner un de vos personnage
+                       Quelle action souhaitez-vous faire ?
+                       1. ⚔️ Attaquer un personnage adverse
+                       2. 💕 Soigner un de vos personnages
+
                        """)
         let action = readLine()
         switch action {
@@ -187,7 +214,8 @@ class Game {
     
     func makeAction(from: Character, target: Player, action: ActionType) {
         print("""
-            Quel est la cible de l'action ?
+            
+            Quelle est la cible de l'action ?
             1. \(target.characters[0].name) vie: \(target.characters[0].life)
             2. \(target.characters[1].name) vie: \(target.characters[1].life)
             3. \(target.characters[2].name) vie: \(target.characters[2].life)
@@ -199,17 +227,30 @@ class Game {
             let selectedIdx = Int(selectedAction!)! - 1
             let targetCharacter = target.characters[selectedIdx]
             
+            guard targetCharacter.life > 0 else {
+                print("Votre choix n'est pas valide, le personnage est mort")
+                return makeAction(from: from, target: target, action: action)
+            }
+            
             if action == .Attack {
                 targetCharacter.life -= from.weapon.damage
+                // no negative life
+                if targetCharacter.life <= 0 {
+                    targetCharacter.life = 0
+                }
                 print("""
-                    \(from.name) inflige à \(targetCharacter.name) \(from.weapon.damage) points de dégats
-                    \(targetCharacter.name) à maintenant: \(targetCharacter.life) points de vie
+                    \(from.name) inflige à \(targetCharacter.name) \(from.weapon.damage) ⚔️ points de dégâts
+                    \(targetCharacter.name) à maintenant: \(targetCharacter.life) ❤️ points de vie
                     """)
             } else if action == .Heal {
                 targetCharacter.life += from.weapon.damage
+                // overheal
+                if targetCharacter.life >= targetCharacter.lifemax {
+                    targetCharacter.life = targetCharacter.lifemax
+                }
                 print("""
-                    \(from.name) soigne \(targetCharacter.name) de \(from.weapon.damage) points de vie
-                    \(targetCharacter.name) à maintenant:  \(targetCharacter.life) points de vie
+                    \(from.name) soigne \(targetCharacter.name) de \(from.weapon.damage) 💕 points de vie
+                    \(targetCharacter.name) à maintenant:  \(targetCharacter.life) ❤️ points de vie
                     """)
             }
         default:

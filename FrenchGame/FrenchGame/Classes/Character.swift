@@ -11,12 +11,14 @@ import Foundation
 class Character {
     var name: String
     var life: Int
+    var lifemax: Int
     var weapon: Weapon
     
     init(name: String, life: Int, weapon: Weapon) {    /* Initialiseur */
         self.name = name
         self.weapon = weapon
         self.life = life
+        self.lifemax = life
     }
     
 }

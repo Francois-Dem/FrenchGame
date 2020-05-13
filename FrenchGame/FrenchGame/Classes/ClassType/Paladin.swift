@@ -11,7 +11,7 @@ import Foundation
 class Paladin: Character {
     
     init(name: String) {
-        super.init(name: name, life: 120, weapon: Hammer())
+        super.init(name: name, life: 50, weapon: Hammer())
         
     }
 }
